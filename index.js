@@ -1,6 +1,10 @@
-const app = require("express")();
+const path = require("path");
+require("dotenv").config();
+const express = require("express")
+const app = express()
 const server = require("http").createServer(app);
 const cors = require("cors");
+
 
 const io = require("socket.io")(server, {
 	cors: {
@@ -13,9 +17,18 @@ app.use(cors());
 
 const PORT = process.env.PORT || 5000;
 
-app.get('/', (req, res) => {
-	res.send('Running');
-});
+if (process.env.NODE_ENV === "prod") {
+  app.use(express.static("client/build"));
+
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "client/build/index.html"));
+  });
+} else {
+  app.get('/', (req, res) => {
+		res.send('Running');
+	});
+}
+
 
 io.on("connection", (socket) => {
 	socket.emit("me", socket.id);
