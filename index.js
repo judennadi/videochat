@@ -18,10 +18,10 @@ app.use(cors());
 const PORT = process.env.PORT || 5000;
 
 if (process.env.NODE_ENV === "prod") {
-  app.use(express.static("client/build"));
+  app.use(express.static("client/site"));
 
   app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "client/build/index.html"));
+    res.sendFile(path.join(__dirname, "client/site/index.html"));
   });
 } else {
   app.get('/', (req, res) => {
